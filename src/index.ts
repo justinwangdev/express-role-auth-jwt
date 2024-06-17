@@ -1,14 +1,22 @@
+require("module-alias/register");
+
 import express from "express";
+import routes from "./routes";
+import cors from "cors";
 
-const app=express();
+const app = express();
 
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN!,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res)=>{
-   res.status(200).send("You are getting root!")
-})
+app.use(routes);
 
-app.listen(9000, () => {
-    console.log("Server running on port 9000");
-})
+const port = process.env.PORT || 9000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
