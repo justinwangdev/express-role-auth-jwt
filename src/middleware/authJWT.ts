@@ -11,7 +11,8 @@ export const verifyToken = (
   res: Response,
   next: NextFunction
 ) => {
-  let token = req.headers["x-access-token"] as string;
+  const bearerHeader = req.headers["authorization"] as string;
+  const token = bearerHeader.split(' ')[1];
   if (!token) {
     return res.status(401).json({
       message: "No token provided",
@@ -28,24 +29,6 @@ export const verifyToken = (
   });
 };
 
-export const isLogin = (req: Request, res: Response) => {
-  let token = req.headers["x-access-token"] as string;
-  if (!token) {
-    return res.json({
-      isLogin: false,
-    });
-  }
-  jwt.verify(token, process.env.JWT_SECRET!, (err, decoded) => {
-    if (err) {
-      return res.json({
-        isLogin: false,
-      });
-    }
-    return res.json({
-      isLogin: true,
-    });
-  });
-};
 
 export const isAdmin = async (
   req: Request,
